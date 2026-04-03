@@ -17,10 +17,12 @@ LOGGER.setLevel(logging.INFO)
 TABLE_NAME = os.environ["TABLE_NAME"]
 AUDIT_BUCKET = os.environ["AUDIT_BUCKET"]
 AUDIT_PREFIX = os.environ.get("AUDIT_PREFIX", "audit").strip("/") or "audit"
+COMPREHEND_LANGUAGE_CODE = "en"
 
 dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table(TABLE_NAME)
 s3_client = boto3.client("s3")
+comprehend_client = boto3.client("comprehend")
 
 
 class DecimalEncoder(json.JSONEncoder):
@@ -191,6 +193,42 @@ def update_note(event: dict[str, Any], note_id: str) -> dict[str, Any]:
     return build_response(200, updated_note)
 
 
+def get_note_phrases(note_id: str) -> dict[str, Any]:
+    note = table.get_item(Key={"id": note_id}).get("Item")
+    if not note:
+        return build_response(404, {"message": "Note not found."})
+
+    text = (note.get("text") or "").strip()
+    if not text:
+        return build_response(400, {"message": "Note text is empty."})
+
+    comprehend_response = comprehend_client.detect_key_phrases(
+        Text=text,
+        LanguageCode=COMPREHEND_LANGUAGE_CODE,
+    )
+
+    key_phrases: list[str] = []
+    for phrase in comprehend_response.get("KeyPhrases", []):
+        phrase_text = phrase.get("Text", "").strip()
+        if phrase_text and phrase_text not in key_phrases:
+            key_phrases.append(phrase_text)
+
+    note["key_phrases"] = key_phrases
+    note["phrases_extracted_at"] = datetime.now(UTC).isoformat()
+    note["phrases_language_code"] = COMPREHEND_LANGUAGE_CODE
+    table.put_item(Item=note)
+
+    return build_response(
+        200,
+        {
+            "id": note_id,
+            "key_phrases": key_phrases,
+            "language_code": COMPREHEND_LANGUAGE_CODE,
+            "phrases_extracted_at": note["phrases_extracted_at"],
+        },
+    )
+
+
 def handler(event: dict[str, Any], context: Any) -> dict[str, Any]:
     method = get_http_method(event)
     path = get_request_path(event)
@@ -206,6 +244,8 @@ def handler(event: dict[str, Any], context: Any) -> dict[str, Any]:
             result = create_note(event)
         elif method == "GET" and path == "/notes":
             result = list_notes()
+        elif method == "GET" and path.endswith("/phrases") and path.startswith("/notes/") and note_id:
+            result = get_note_phrases(note_id)
         elif method == "GET" and path.startswith("/notes/") and note_id:
             result = get_note(note_id)
         elif method == "PUT" and path.startswith("/notes/") and note_id:
@@ -218,7 +258,8 @@ def handler(event: dict[str, Any], context: Any) -> dict[str, Any]:
                 {
                     "message": (
                         "Supported routes: POST /notes, GET /notes, "
-                        "GET /notes/{id}, PUT /notes/{id}, DELETE /notes/{id}."
+                        "GET /notes/{id}, GET /notes/{id}/phrases, "
+                        "PUT /notes/{id}, DELETE /notes/{id}."
                     )
                 },
             )
@@ -227,8 +268,15 @@ def handler(event: dict[str, Any], context: Any) -> dict[str, Any]:
         result = build_response(400, {"message": error_message})
     except ClientError as exc:
         LOGGER.exception("AWS SDK request failed.")
-        error_message = exc.response.get("Error", {}).get("Message", "AWS request failed.")
-        result = build_response(500, {"message": error_message})
+        error = exc.response.get("Error", {})
+        error_code = error.get("Code", "ClientError")
+        error_message = error.get("Message", "AWS request failed.")
+        status_code = 400 if error_code in {
+            "InvalidRequestException",
+            "TextSizeLimitExceededException",
+            "UnsupportedLanguageException",
+        } else 500
+        result = build_response(status_code, {"message": error_message, "error_code": error_code})
     except Exception:
         LOGGER.exception("Unexpected server error.")
         error_message = "Internal server error."

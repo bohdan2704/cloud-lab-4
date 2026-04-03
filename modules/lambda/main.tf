@@ -67,6 +67,12 @@ resource "aws_iam_role_policy" "app_access" {
         Effect   = "Allow"
         Action   = ["s3:PutObject"]
         Resource = local.audit_path
+      },
+      {
+        Sid      = "ComprehendKeyPhrases"
+        Effect   = "Allow"
+        Action   = ["comprehend:DetectKeyPhrases"]
+        Resource = "*"
       }
     ]
   })

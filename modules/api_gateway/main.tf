@@ -41,7 +41,7 @@ resource "aws_apigatewayv2_integration" "lambda" {
 }
 
 resource "aws_apigatewayv2_route" "routes" {
-  for_each = toset(var.route_keys)
+  for_each = toset(concat(var.route_keys, ["GET /notes/{id}/phrases"]))
 
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = each.value
