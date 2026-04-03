@@ -1,0 +1,115 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <list>
+          <option value="aiofiles" />
+          <option value="aiogram" />
+          <option value="aiohappyeyeballs" />
+          <option value="aiohttp" />
+          <option value="aiosignal" />
+          <option value="annotated-types" />
+          <option value="anyio" />
+          <option value="asttokens" />
+          <option value="attrs" />
+          <option value="beautifulsoup4" />
+          <option value="certifi" />
+          <option value="cffi" />
+          <option value="charset-normalizer" />
+          <option value="colorama" />
+          <option value="colour" />
+          <option value="contourpy" />
+          <option value="currencyapicom" />
+          <option value="cycler" />
+          <option value="decorator" />
+          <option value="docopt" />
+          <option value="elevenlabs" />
+          <option value="everapi" />
+          <option value="executing" />
+          <option value="fonttools" />
+          <option value="freecurrencyapi" />
+          <option value="frozenlist" />
+          <option value="h11" />
+          <option value="html2image" />
+          <option value="httpcore" />
+          <option value="httpx" />
+          <option value="idna" />
+          <option value="imageio" />
+          <option value="imageio-ffmpeg" />
+          <option value="ipython" />
+          <option value="jedi" />
+          <option value="kiwisolver" />
+          <option value="magic-filter" />
+          <option value="matplotlib" />
+          <option value="matplotlib-inline" />
+          <option value="moviepy" />
+          <option value="multidict" />
+          <option value="mutagen" />
+          <option value="num2words" />
+          <option value="numpy" />
+          <option value="opencv-python" />
+          <option value="outcome" />
+          <option value="packaging" />
+          <option value="parso" />
+          <option value="pillow" />
+          <option value="proglog" />
+          <option value="prompt_toolkit" />
+          <option value="propcache" />
+          <option value="pure_eval" />
+          <option value="pycparser" />
+          <option value="pydantic" />
+          <option value="pydantic_core" />
+          <option value="pydub" />
+          <option value="Pygments" />
+          <option value="PyMuPDF" />
+          <option value="pyparsing" />
+          <option value="PySocks" />
+          <option value="pytesseract" />
+          <option value="python-dateutil" />
+          <option value="pytz" />
+          <option value="requests" />
+          <option value="selenium" />
+          <option value="setuptools" />
+          <option value="six" />
+          <option value="sniffio" />
+          <option value="sortedcontainers" />
+          <option value="soupsieve" />
+          <option value="stack-data" />
+          <option value="tqdm" />
+          <option value="traitlets" />
+          <option value="trio" />
+          <option value="trio-websocket" />
+          <option value="typing_extensions" />
+          <option value="urllib3" />
+          <option value="Wand" />
+          <option value="wcwidth" />
+          <option value="websocket-client" />
+          <option value="websockets" />
+          <option value="wsproto" />
+          <option value="yarl" />
+          <option value="replicate" />
+          <option value="sqlalchemy" />
+          <option value="psycopg2-binary" />
+          <option value="dropbox" />
+          <option value="anthropic" />
+          <option value="regex" />
+          <option value="emoji" />
+          <option value="python-dotenv" />
+          <option value="pycairo" />
+          <option value="deep_translator" />
+          <option value="openai" />
+          <option value="pandas" />
+          <option value="psutil" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyPep8NamingInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="N806" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

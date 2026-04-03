@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"api_gateway","Source":"../../modules/api_gateway","Dir":"../../modules/api_gateway"},{"Key":"dynamodb","Source":"../../modules/dynamodb","Dir":"../../modules/dynamodb"},{"Key":"lambda","Source":"../../modules/lambda","Dir":"../../modules/lambda"}]}
